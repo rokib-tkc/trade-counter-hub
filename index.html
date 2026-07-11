@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Trade Counter Advance Picks</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="app" class="app-shell">
+    <aside class="sidebar">
+      <div class="brand"><div class="brand-mark">AP</div><div><strong>Trade Counter</strong><span>Operations Hub</span></div></div>
+      <nav>
+        <button class="nav-item active" data-view="calendar">▦ <span>Advance Pick Calendar</span></button>
+        <button class="nav-item" data-view="board">☷ <span>Picking Board</span></button>
+        <button class="nav-item" data-view="workload">♙ <span>Team Workload</span></button>
+      </nav>
+      <div class="sidebar-foot"><button id="openSettings" class="nav-item">⚙ <span>Settings</span></button></div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div><h1 id="pageTitle">Advance Pick Calendar</h1><p>Manage collection bookings and picking priorities</p></div>
+        <div class="top-actions">
+          <input id="searchInput" type="search" placeholder="Search order or customer…" />
+          <button id="refreshBtn" class="btn secondary">Refresh</button>
+          <button id="newBookingBtn" class="btn primary">＋ New Booking</button>
+        </div>
+      </header>
+
+      <section class="toolbar">
+        <div class="date-controls">
+          <button id="todayBtn" class="btn secondary">Today</button>
+          <button id="prevWeekBtn" class="icon-btn">‹</button>
+          <button id="nextWeekBtn" class="icon-btn">›</button>
+          <strong id="weekLabel"></strong>
+        </div>
+        <div class="filters">
+          <select id="statusFilter"><option value="">All statuses</option></select>
+          <select id="pickerFilter"><option value="">All pickers</option></select>
+        </div>
+      </section>
+
+      <section id="stats" class="stats-grid"></section>
+      <section id="calendarView" class="view"></section>
+      <section id="boardView" class="view hidden"></section>
+      <section id="workloadView" class="view hidden"></section>
+    </main>
+  </div>
+
+  <div id="modal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <div class="modal-head"><div><h2 id="modalTitle">New booking</h2><p>Add or update collection and picking details</p></div><button id="closeModal" class="icon-btn">×</button></div>
+      <form id="bookingForm" class="form-grid">
+        <input type="hidden" id="bookingId" />
+        <label>Order number*<input id="orderNumber" required maxlength="30" /></label>
+        <label>Customer*<input id="customer" required maxlength="80" /></label>
+        <label>Collection date*<input id="collectionDate" type="date" required /></label>
+        <label>Collection time*<input id="collectionTime" type="time" required /></label>
+        <label>Order size / items<input id="orderSize" type="number" min="0" /></label>
+        <label>Estimated pick minutes<input id="estimatedMinutes" type="number" min="0" value="30" /></label>
+        <label>Payment type<select id="paymentType"></select></label>
+        <label>Assigned picker<select id="assignedPicker"></select></label>
+        <label>Status<select id="status"></select></label>
+        <label>Priority<select id="priority"><option>Normal</option><option>High</option><option>Urgent</option></select></label>
+        <label>Vehicle / collection type<input id="vehicleType" placeholder="e.g. Transit LWB" /></label>
+        <label>Booked by<input id="bookedBy" /></label>
+        <label class="full">Special instructions<textarea id="notes" rows="4"></textarea></label>
+        <div class="form-actions full">
+          <button type="button" id="deleteBtn" class="btn danger hidden">Delete</button>
+          <span class="spacer"></span>
+          <button type="button" id="cancelBtn" class="btn secondary">Cancel</button>
+          <button type="submit" class="btn primary">Save booking</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="settingsModal" class="modal hidden">
+    <div class="modal-card small">
+      <div class="modal-head"><div><h2>Connection settings</h2><p>Saved only in this browser</p></div><button id="closeSettings" class="icon-btn">×</button></div>
+      <div class="form-grid">
+        <label class="full">Apps Script Web App URL<input id="apiUrl" placeholder="https://script.google.com/macros/s/.../exec" /></label>
+        <label class="full">Shared access key<input id="apiKey" type="password" /></label>
+        <div class="form-actions full"><span class="spacer"></span><button id="saveSettings" class="btn primary">Save & test</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
