@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Trade Counter Operations Hub v1.3.4</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=1.3.3">
+</head>
+<body>
+<div id="loginScreen" class="login-screen">
+  <div class="login-shell">
+    <div class="login-brand">
+      <div class="brand-mark">TC</div>
+      <div><strong>Trade Counter Hub</strong><span>Operations Hub</span></div>
+    </div>
+    <div class="login-card">
+      <div class="login-copy"><span class="eyebrow">TEAM ACCESS</span><h1>Welcome back</h1><p>Sign in to manage collections, picking priorities and customer service activity.</p></div>
+      <form id="loginForm" action="javascript:void(0)">
+        <label>Name<input id="loginName" autocomplete="username" required placeholder="Enter your name"></label>
+        <label>Access Key<input id="loginKey" type="password" autocomplete="current-password" required placeholder="Enter your access key"></label>
+        <button class="primary wide" type="submit">Sign in</button>
+        <div id="loginError" class="error" role="alert"></div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div id="app" class="app hidden">
+  <aside class="sidebar">
+    <div class="logo-row"><div class="brand-mark small">TC</div><div><strong>Trade Counter</strong><span>Operations Hub</span></div></div>
+    <nav class="main-nav">
+      <button data-page="dashboard"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.8 12 3l9 7.8v9.7a.5.5 0 0 1-.5.5H15v-6H9v6H3.5a.5.5 0 0 1-.5-.5z"/></svg></span><span>Dashboard</span></button>
+      <button class="active" data-page="advance"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 9h18M7 13h3M14 13h3M7 17h3"/></svg></span><span>Advance Picks</span></button>
+      <button data-page="small"><span class="nav-icon">▦</span><span>Small Orders</span></button>
+      <button data-page="board"><span class="nav-icon">⇆</span><span>Picking Board</span></button>
+      <button data-page="reports"><span class="nav-icon">▥</span><span>Reports</span></button>
+    </nav>
+    <div class="side-bottom">
+      <section id="presencePanel" class="presence-panel" aria-label="Users online">
+        <div class="presence-heading"><span class="presence-dot"></span><strong>Online</strong><span id="presenceCount">0</span></div>
+        <div id="presenceList" class="presence-list"><span class="presence-empty">Connecting…</span></div>
+      </section>
+      <button data-page="settings"><span class="nav-icon">⚙</span><span>Settings</span></button>
+      <button id="logoutBtn"><span class="nav-icon">↪</span><span>Sign out</span></button>
+    </div>
+  </aside>
+
+  <main>
+    <header class="topbar">
+      <div><h1 id="pageTitle">Advance Picks</h1><p id="pageSubtitle">View and manage timed large-order collections</p></div>
+      <div class="top-actions"><div id="connectionState" class="connection-state connecting" aria-live="polite"><span></span><strong>Connecting…</strong></div>
+        <div class="search-wrap"><span>⌕</span><input id="searchInput" placeholder="Search orders or customers"></div>
+        <button id="notificationBtn" type="button" class="icon-btn bell-btn" aria-label="Notifications" title="Notifications"><svg class="notification-bell-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/></svg><span id="notificationBadge" class="badge hidden">0</span></button>
+        <div id="userChip" class="user-chip"><div><strong id="userName"></strong><small id="userRole"></small></div><div id="userAvatar" class="avatar"></div></div>
+      </div>
+    </header>
+
+    <section id="mainContent">
+      <div id="plannerControls" class="toolbar">
+        <div class="date-nav"><button id="todayBtn">Today</button><button id="prevBtn" class="square">‹</button><button id="nextBtn" class="square">›</button><strong id="dateLabel"></strong></div>
+        <div class="toolbar-right"><select id="viewMode"><option value="week">Week view</option><option value="day">Day view</option></select><button id="filterBtn">☷ Filters</button><button id="refreshBtn" class="accent">↻ Refresh</button><button id="newBookingBtn" class="primary">＋ New Booking</button></div>
+      </div>
+      <div id="filterPanel" class="filter-panel hidden"><label>Status<select id="statusFilter"><option value="">All statuses</option></select></label><label>Picker<select id="pickerFilter"><option value="">All pickers</option></select></label><label>Priority<select id="priorityFilter"><option value="">All priorities</option><option>Normal</option><option>High</option><option>Urgent</option></select></label><button id="clearFilters">Clear filters</button></div>
+      <div id="stats" class="stats"></div>
+      <div id="pageBody"></div>
+    </section>
+  </main>
+</div>
+
+<div id="notificationPanel" class="drawer hidden"><div class="drawer-head"><h2>Notifications</h2><button data-close="notificationPanel">×</button></div><div id="notificationList"></div></div>
+<div id="orderPanel" class="order-panel hidden"><div class="drawer-head order-panel-head"><div class="order-heading"><span class="eyebrow">ORDER OVERVIEW</span><h2 id="orderPanelTitle"></h2></div><div class="order-head-actions"><span id="orderPanelStatus"></span><button data-close="orderPanel" aria-label="Close order view">×</button></div></div><div class="tabs"><button class="active" data-order-tab="details">Details</button><button data-order-tab="notes">Notes</button><button data-order-tab="activity">Activity</button></div><div id="orderPanelContent"></div><div class="panel-actions"><button id="panelEdit">Edit Booking</button><button id="panelWaiting">Customer Waiting</button><button id="panelReady">Mark as Ready</button><button id="panelCollected" class="primary">Collected</button></div></div>
+
+<div id="bookingModal" class="modal hidden"><div class="modal-card booking-modal"><div class="modal-head"><div><span class="eyebrow">BOOKING DETAILS</span><h2 id="modalTitle">New Booking</h2><p>Create or update the collection and picking requirements.</p></div><button data-close="bookingModal">×</button></div><form id="bookingForm">
+  <input id="bookingId" type="hidden">
+  <section class="form-section"><div class="section-title"><span>1</span><div><h3>Order information</h3><p>Core customer and order details</p></div></div><div class="form-grid"><label>Order Number<input id="orderNumber" required></label><label>Customer<input id="customer" required></label><label>Booking Type<select id="bookingType" required><option>Advance Large Order</option><option>Small Order</option><option>Walk in</option></select></label><label>Number of Items<input id="itemCount" type="number" min="0"></label></div></section>
+  <section class="form-section"><div class="section-title"><span>2</span><div><h3>Collection and priority</h3><p>Choose the collection date, time and responsible picker</p></div></div><div class="form-grid"><label>Collection Date<input id="collectionDate" type="date" required></label><label>Collection Time<select id="collectionTime"></select></label><label>Assigned Picker<select id="assignedPicker"><option value="">Unassigned</option></select></label><label>Priority<select id="priority"><option>Normal</option><option>High</option><option>Urgent</option></select></label></div></section>
+  <section class="form-section"><div class="section-title"><span>3</span><div><h3>Payment and account</h3><p>Confirm payment and release status</p></div></div><div class="form-grid"><label>Payment Type<select id="paymentType"></select></label><label>Payment Status<select id="paymentStatus"><option>Paid</option><option>Payment Required</option></select></label><label>Account Status<select id="accountStatus"><option>Released</option><option>Held</option></select></label><label>Booked by (Sales Team Member)<input id="bookedBy"></label><label>Order Value ex VAT (£)<input id="orderValueExVAT" type="number" min="0" step="0.01"></label><label>Order Value inc VAT (£)<input id="orderValueIncVAT" disabled></label></div></section>
+  <section class="form-section"><div class="section-title"><span>4</span><div><h3>Picking and collection status</h3><p>Record operational progress independently</p></div></div><div class="form-grid"><label>Pick Status<select id="pickStatus"><option>Waiting</option><option>Picking</option><option>Ready</option><option>Problem</option><option>Cancelled</option></select></label><label>Collection Status<select id="collectionStatus"><option value="">Not arrived</option><option>Customer Waiting</option><option>Collected</option></select></label></div></section>
+  <section class="form-section"><div class="section-title"><span>5</span><div><h3>Order requirements</h3><p>Select only the requirements that apply</p></div></div><div class="checks"><label><input id="drillingRequired" type="checkbox">Drilling Required</label><label><input id="parkwayItems" type="checkbox">Parkway Items</label><label><input id="airPicks" type="checkbox">Air Picks</label><label><input id="osItems" type="checkbox">O/S Items</label><label><input id="paintedOrder" type="checkbox">Painted Order</label><label><input id="madeToMeasure" type="checkbox">Made to Measure</label></div></section>
+  <section class="form-section"><div class="section-title"><span>6</span><div><h3>Notes</h3><p>Add collection or picking instructions</p></div></div><label>Notes<textarea id="notes" rows="4"></textarea></label></section>
+  <div class="modal-actions"><button type="button" id="deleteBookingBtn" class="danger hidden">Delete</button><span></span><button type="button" data-close="bookingModal">Cancel</button><button class="primary" type="submit">Save Booking</button></div>
+</form></div></div>
+
+<div id="settingsModal" class="modal hidden"><div class="modal-card large"><div class="modal-head"><div><span class="eyebrow">APPLICATION CONTROL</span><h2>Settings</h2></div><button data-close="settingsModal">×</button></div><div id="settingsContent"></div></div></div>
+<div id="toast" class="toast hidden"></div>
+<div id="loadingOverlay" class="loading-overlay hidden"><div class="spinner"></div><strong id="loadingText">Loading…</strong></div>
+<script src="config.js?v=1.3.3"></script><script src="app.js?v=1.3.3"></script>
+<script>setTimeout(function(){if(!window.APM_APP_LOADED){var e=document.getElementById('loginError');if(e)e.textContent='The application JavaScript did not load. Confirm app.js is beside index.html, then refresh with Ctrl + F5.';}},1500);</script>
+</body></html>
